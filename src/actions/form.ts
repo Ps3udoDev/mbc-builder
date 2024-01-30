@@ -139,7 +139,7 @@ export async function PublishMbc(id: number) {
   });
 }
 
-export async function GetFormContentByUrl(mbcUrl: string) {
+/* export async function GetFormContentByUrl(mbcUrl: string) {
   return await prisma.modelBussines.update({
     select: {
       content: true,
@@ -172,7 +172,7 @@ export async function SubmitForm(mbcUrl: string, content: string) {
       published: true,
     },
   });
-}
+} */
 
 export async function GetFormWithSubmissions(id: number) {
   const user = await currentUser();
