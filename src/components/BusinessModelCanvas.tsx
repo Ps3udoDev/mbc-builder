@@ -5,15 +5,15 @@ import useDesigner from './hooks/useDesigner';
 
 export default function BusinessModelCanvas() {
   const { setElements, elements, addElement } = useDesigner();
-  const [keyPartners, setKeyPartners] = useState([]);
-  const [keyActivities, setKeyActivities] = useState([]);
-  const [customerRelationships, setCustomerRelationships] = useState([]);
-  const [customerSegments, setCustomerSegments] = useState([]);
-  const [keyResources, setKeyResources] = useState([]);
-  const [channels, setChannels] = useState([]);
-  const [costStructure, setCostStructure] = useState([]);
-  const [revenueStreams, setRevenueStreams] = useState([]);
-  const [valuePropositions, setValuePropositions] = useState([]);
+  const [keyPartners, setKeyPartners] = useState<MbcElementInstance[]>([]);
+  const [keyActivities, setKeyActivities] = useState<MbcElementInstance[]>([]);
+  const [customerRelationships, setCustomerRelationships] = useState<MbcElementInstance[]>([]);
+  const [customerSegments, setCustomerSegments] = useState<MbcElementInstance[]>([]);
+  const [keyResources, setKeyResources] = useState<MbcElementInstance[]>([]);
+  const [channels, setChannels] =useState<MbcElementInstance[]>([]);
+  const [costStructure, setCostStructure] = useState<MbcElementInstance[]>([]);
+  const [revenueStreams, setRevenueStreams] = useState<MbcElementInstance[]>([]);
+  const [valuePropositions, setValuePropositions] = useState<MbcElementInstance[]>([]);
 
   useEffect(() => {
     const filterElementsForSections = () => {
