@@ -19,7 +19,6 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <ClerkProvider>
       <html lang="en">
         <body className={inter.className}>
           <DesignerContextProvider>
@@ -35,7 +34,6 @@ export default function RootLayout({
           </DesignerContextProvider>
         </body>
       </html>
-    </ClerkProvider>
 
   )
 }

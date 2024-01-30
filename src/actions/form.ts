@@ -3,19 +3,16 @@
 import { currentUser } from "@clerk/nextjs"
 import prisma from '@/lib/prisma'
 import { mbcSchema, mbcSchemaType } from "@/schemas/mbc"
+import { v4 as uuidv4 } from 'uuid';
 
 class UserNotFoudErr extends Error { }
 
 export async function GetMbcStats() {
-  const user = await currentUser()
-
-  if (!user) {
-    throw new UserNotFoudErr()
-  }
+  const generatedUserId = uuidv4();
 
   const stats = await prisma.modelBussines.aggregate({
     where: {
-      userId: user.id
+      userId: generatedUserId
     },
     _sum: {
       visits: true,
@@ -44,24 +41,20 @@ export async function GetMbcStats() {
 
 export async function CreateMbc(data: mbcSchemaType) {
   const validation = mbcSchema.safeParse(data)
-
+  const userId = 'anonymous'
   if (!validation.success) {
     throw new Error('mbc not valid')
   }
 
-  const user = await currentUser()
-
-  if (!user) {
-    throw new UserNotFoudErr()
-  }
+  const generatedUserId = uuidv4();
 
   const { name, description } = data
 
   const mbc = await prisma.modelBussines.create({
     data: {
-      userId: user.id,
+      userId,
       name,
-      description
+      description,
     }
   })
 
@@ -73,15 +66,15 @@ export async function CreateMbc(data: mbcSchemaType) {
 }
 
 export async function GetMbcs() {
-  const user = await currentUser()
+  const generatedUserId = uuidv4();
+  const userIdToExclude = 'anonymous';
 
-  if (!user) {
-    throw new UserNotFoudErr()
-  }
 
   return await prisma.modelBussines.findMany({
     where: {
-      userId: user.id
+      NOT: {
+        userId: userIdToExclude,
+      },
     },
     orderBy: {
       createdAt: 'desc'
@@ -90,50 +83,47 @@ export async function GetMbcs() {
 }
 
 export async function GetMbcById(id: number) {
-  const user = await currentUser()
+  const generatedUserId = uuidv4();
+  const userIdToExclude = 'anonymous';
 
-  if (!user) {
-    throw new UserNotFoudErr()
-  }
 
   return await prisma.modelBussines.findUnique({
     where: {
-      userId: user.id,
+      NOT: {
+        userId: userIdToExclude,
+      },
       id
     },
   })
 }
 
-export async function UpdateMbcContent(id: number, jsonContent: string){
-  const user = await currentUser()
-
-  if (!user) {
-    throw new UserNotFoudErr()
-  }
-
+export async function UpdateMbcContent(id: number, jsonContent: string) {
+  const generatedUserId = uuidv4();
+  const userIdToExclude = 'anonymous';
   return await prisma.modelBussines.update({
     where: {
-      userId: user.id,
+      NOT: {
+        userId: userIdToExclude,
+      },
       id
     },
-    data:{
+    data: {
       content: jsonContent
     }
   })
 }
 
 export async function PublishMbc(id: number) {
-  const user = await currentUser();
-  if (!user) {
-    throw new UserNotFoudErr();
-  }
-
+  const generatedUserId = uuidv4();
+  const userIdToExclude = 'anonymous';
   return await prisma.modelBussines.update({
     data: {
       published: true,
     },
     where: {
-      userId: user.id,
+      NOT: {
+        userId: userIdToExclude,
+      },
       id,
     },
   });
@@ -175,14 +165,13 @@ export async function SubmitForm(mbcUrl: string, content: string) {
 } */
 
 export async function GetFormWithSubmissions(id: number) {
-  const user = await currentUser();
-  if (!user) {
-    throw new UserNotFoudErr();
-  }
-
+  const generatedUserId = uuidv4();
+  const userIdToExclude = 'anonymous';
   return await prisma.modelBussines.findUnique({
     where: {
-      userId: user.id,
+      NOT: {
+        userId: userIdToExclude,
+      },
       id,
     },
     include: {
