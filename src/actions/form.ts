@@ -139,7 +139,7 @@ export async function PublishMbc(id: number) {
   });
 }
 
-export async function GetFormContentByUrl(formUrl: string) {
+export async function GetFormContentByUrl(mbcUrl: string) {
   return await prisma.modelBussines.update({
     select: {
       content: true,
@@ -150,25 +150,25 @@ export async function GetFormContentByUrl(formUrl: string) {
       },
     },
     where: {
-      shareURL: formUrl,
+      shareURL: mbcUrl,
     },
   });
 }
 
-export async function SubmitForm(formUrl: string, content: string) {
+export async function SubmitForm(mbcUrl: string, content: string) {
   return await prisma.modelBussines.update({
     data: {
       submissions: {
         increment: 1,
       },
-      FormSubmissions: {
+      ModelBussinesSubissions: {
         create: {
           content,
         },
       },
     },
     where: {
-      shareURL: formUrl,
+      shareURL: mbcUrl,
       published: true,
     },
   });
@@ -177,16 +177,16 @@ export async function SubmitForm(formUrl: string, content: string) {
 export async function GetFormWithSubmissions(id: number) {
   const user = await currentUser();
   if (!user) {
-    throw new UserNotFoundErr();
+    throw new UserNotFoudErr();
   }
 
-  return await prisma.form.findUnique({
+  return await prisma.modelBussines.findUnique({
     where: {
       userId: user.id,
       id,
     },
     include: {
-      FormSubmissions: true,
+      ModelBussinesSubissions: true,
     },
   });
 }
