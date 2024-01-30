@@ -8,7 +8,13 @@ import { BiSolidTrash } from 'react-icons/bi';
 import { cn } from '@/lib/utils';
 import { DesignerElementWrapper } from './Designer';
 
-export default function CanvasSection({ title, typeSection, sectionElements, setSectionElements, className }) {
+export default function CanvasSection({ title, typeSection, sectionElements, setSectionElements, className }: {
+  title: string;
+  typeSection: string; // O el tipo específico que debería tener
+  sectionElements: MbcElementInstance[]; // O el tipo específico que debería tener
+  setSectionElements: React.Dispatch<React.SetStateAction<MbcElementInstance[]>>; // O el tipo específico que debería tener
+  className?: string;
+}) {
   const { elements, addElement } = useDesigner()
 
   const droppable = useDroppable({
@@ -21,16 +27,17 @@ export default function CanvasSection({ title, typeSection, sectionElements, set
   useDndMonitor({
     onDragEnd: (event: DragEndEvent) => {
       const { active, over } = event;
+  
       if (over && over.id === `droppable-${title.toLowerCase().replace(/\s+/g, '-')}`) {
         const isDesignerBtnElement = active.data?.current?.isDesignerBtnElement;
-
+  
         if (isDesignerBtnElement) {
           const type = active.data?.current?.type as ElementsType;
-          const newElement = MbcElements[type].construct(idGenerator(typeSection));
+          const newElement = MbcElements[type].construct(idGenerator(typeSection)) as MbcElementInstance;
           setSectionElements([...sectionElements, newElement]);
-          addElement(elements.length, newElement)
-
-          console.log('this is the elementes in canvas section', elements)
+          addElement(elements.length, newElement);
+  
+          console.log('this is the elementes in canvas section', elements);
         }
       }
     },
